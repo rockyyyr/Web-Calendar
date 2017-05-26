@@ -4,6 +4,6 @@ var Global = function(){
 	var debug = "http://localhost:8080/Web_Calendar";
 	
 	return{
-		url: production
+		url: debug
 	};
 }();

@@ -4,6 +4,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import appointmentcalendar.model.Data;
 import appointmentcalendar.model.Responder;
 import appointmentcalendar.model.User;
@@ -14,7 +17,7 @@ import appointmentcalendar.model.dto.LoginResponseDto;
  */
 public class Login extends Action {
 
-	// private static final Logger LOG = LogManager.getLogger();
+	private static final Logger LOG = LogManager.getLogger();
 
 	private LoginResponseDto dataTransfer;
 
@@ -37,9 +40,12 @@ public class Login extends Action {
 				dataTransfer.setFirstName(user.getFirstName());
 				dataTransfer.setAppointments(receptionist.getAppointmentsForUser(email));
 				request.getSession().setAttribute("user", user);
+				LOG.info("User logged in - " + user);
 				break;
 			case 4:
+				User admin = receptionist.getUser(email);
 				response.addCookie(buildAdminCookie());
+				LOG.info("Admin logged in - " + admin);
 				break;
 		}
 		dataTransfer.setResponseCode(responseCode);

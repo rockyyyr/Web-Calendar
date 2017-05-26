@@ -323,6 +323,7 @@ public class Receptionist {
 	public void scheduleWorkDay(String day) {
 		try {
 			workScheduleDao.scheduleWorkDay(day);
+			LOG.info("Work days edited");
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -363,6 +364,7 @@ public class Receptionist {
 	public void setTimeSlots(String timeSlots, String day) {
 		try {
 			calendarDao.setTimeSlots(timeSlots, day);
+			LOG.info("Time slots edited");
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
