@@ -41,11 +41,11 @@ public class Receptionist {
 	 * @param email
 	 * @param password
 	 * @param accessCode
-	 * @return a response code a response code depending on the registration results:
-	 *         1 - if the user registered successfully
-	 *         2 - if the email address is already registered
-	 *         3 - if there was a database error(SQLException)
-	 *         4 - if the access code was incorrect
+	 * @return a response code a response code depending on the registration results:<br>
+	 *         1 - if the user registered successfully<br>
+	 *         2 - if the email address is already registered<br>
+	 *         3 - if there was a database error(SQLException)<br>
+	 *         4 - if the access code was incorrect<br>
 	 */
 	public int createUser(String firstName, String lastName, String email, String password, String accessCode) {
 		if (accessCode.equalsIgnoreCase(userDao.getAccessCode())) {
@@ -69,10 +69,10 @@ public class Receptionist {
 	 * 
 	 * @param email
 	 * @param password
-	 * @return a response code depending on the login results:
-	 *         1 - the user logged in successfully
-	 *         2 - the user exists but the password is incorrect
-	 *         3 - the email is not registered
+	 * @return a response code depending on the login results:<br>
+	 *         1 - the user logged in successfully<br>
+	 *         2 - the user exists but the password is incorrect<br>
+	 *         3 - the email is not registered<br>
 	 *         4 - user is an admin
 	 * @throws SQLException
 	 */
@@ -104,6 +104,14 @@ public class Receptionist {
 		return user;
 	}
 
+	/**
+	 * Book an appointment
+	 * 
+	 * @param day
+	 * @param time
+	 * @param user
+	 * @return 1 if the booking was successful, 0 otherwise.
+	 */
 	public int bookAppointment(String day, String time, User user) {
 		try {
 			calendarDao.bookAppointment(day, time, user);
@@ -116,6 +124,10 @@ public class Receptionist {
 		}
 	}
 
+	/**
+	 * @param email
+	 * @return a list of appointments for the specified user
+	 */
 	public List<String> getAppointmentsForUser(String email) {
 		List<String> result = new ArrayList<>();
 		try {
@@ -127,6 +139,11 @@ public class Receptionist {
 		return result;
 	}
 
+	/**
+	 * Cancel an appointment
+	 * 
+	 * @param appointment
+	 */
 	public void cancelAppointment(String appointment) {
 		String[] temp = appointment.split("@");
 		String date = temp[0].trim();
@@ -139,6 +156,11 @@ public class Receptionist {
 		}
 	}
 
+	/**
+	 * Add a day to the calendar
+	 * 
+	 * @param day
+	 */
 	public void addDay(Day day) {
 		try {
 			calendarDao.addDay(day);
@@ -148,6 +170,12 @@ public class Receptionist {
 		}
 	}
 
+	/**
+	 * Set the break schedule for the specified day
+	 * 
+	 * @param day
+	 * @param breakList
+	 */
 	public void scheduleBreaks(String day, String breakList) {
 		try {
 			calendarDao.scheduleBreaks(day, breakList);
@@ -157,6 +185,11 @@ public class Receptionist {
 		}
 	}
 
+	/**
+	 * Delete the specified day
+	 * 
+	 * @param day
+	 */
 	public void deleteDay(String day) {
 		try {
 			calendarDao.deleteDay(day);

@@ -42,6 +42,12 @@ public class Login extends Action {
 				request.getSession().setAttribute("user", user);
 				LOG.info("User logged in - " + user);
 				break;
+			case 2:
+				LOG.info("User attempted login but the password was incorrect");
+				break;
+			case 3:
+				LOG.info("User attempted login but the email is not registered");
+				break;
 			case 4:
 				User admin = receptionist.getUser(email);
 				response.addCookie(buildAdminCookie());
