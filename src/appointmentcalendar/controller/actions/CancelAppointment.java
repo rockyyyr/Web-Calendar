@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import appointmentcalendar.model.Data;
+import appointmentcalendar.model.User;
 
 public class CancelAppointment extends Action {
 
@@ -12,6 +13,8 @@ public class CancelAppointment extends Action {
 		Data data = new Data(request);
 		String appointment = data.get("appointment");
 
-		receptionist.cancelAppointment(appointment);
+		User user = (User) request.getSession().getAttribute("user");
+
+		receptionist.cancelAppointment(appointment, user);
 	}
 }

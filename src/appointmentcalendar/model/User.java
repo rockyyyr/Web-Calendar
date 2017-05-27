@@ -9,7 +9,9 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
+
 	private int loginTotal;
+	private int bookingTotal;
 
 	public User() {}
 
@@ -66,6 +68,15 @@ public class User {
 	}
 
 	/**
+	 * Return the total number of bookings for this User
+	 * 
+	 * @return total number of bookings for this User
+	 */
+	public int getBookingTotal() {
+		return bookingTotal;
+	}
+
+	/**
 	 * Sets the firstName for this User
 	 * 
 	 * @param firstName
@@ -112,6 +123,15 @@ public class User {
 	 */
 	public void setLoginTotal(int loginTotal) {
 		this.loginTotal = loginTotal;
+	}
+
+	/**
+	 * Set the total number of bookings for this User
+	 * 
+	 * @param bookingTotal
+	 */
+	public void setBookingTotal(int bookingTotal) {
+		this.bookingTotal = bookingTotal;
 	}
 
 	/*

@@ -5,7 +5,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
@@ -53,7 +55,11 @@ public class UserDao extends Dao {
 	 *             if the result set has more than one result
 	 */
 	public User getUser(String email) {
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'", TABLE_NAME, Field.EMAIL.name, email);
+		String sql = String.format(""
+				+ "SELECT * FROM %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.EMAIL.name, email);
 
 		User user = new User();
 
@@ -73,6 +79,7 @@ public class UserDao extends Dao {
 				user.setEmail(rs.getString(Field.EMAIL.name));
 				user.setPassword(rs.getString(Field.PASSWORD.name));
 				user.setLoginTotal(rs.getInt(Field.LOGIN_TOTAL.name));
+				user.setBookingTotal(rs.getInt(Field.BOOKING_TOTAL.name));
 			}
 		} catch (Exception e) {
 			logError(e, sql);
@@ -101,7 +108,9 @@ public class UserDao extends Dao {
 	public int checkUserCredentials(String email, String password) throws SQLException {
 		int responseCode = 0;
 
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'",
+		String sql = String.format(""
+				+ "SELECT * FROM %s "
+				+ "WHERE %s='%s'",
 				TABLE_NAME,
 				Field.EMAIL.name, email);
 
@@ -149,15 +158,83 @@ public class UserDao extends Dao {
 	}
 
 	/**
-	 * Increment a users total number of logins by one
+	 * Update login specific data for user
 	 * 
 	 * @param user
 	 * @throws SQLException
 	 */
-	public void incrementLoginTotal(User user) {
-		String sql = String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",
+	public void incrementLoginTotalAndUpdateLastLogin(User user) {
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET %s='%s', %s='%s' "
+				+ "WHERE %s='%s'",
 				TABLE_NAME,
 				Field.LOGIN_TOTAL.name, user.getLoginTotal() + 1,
+				Field.LAST_LOGIN.name, Timestamp.valueOf(LocalDateTime.now()),
+				Field.EMAIL.name, user.getEmail());
+		try {
+			executeUpdate(sql);
+		} catch (SQLException e) {
+			logError(e, sql);
+			System.out.println(sql);
+			e.printStackTrace();
+		}
+	}
+
+	public void incrementBookingsTotal(User user) {
+		updateBookingTotal(user, "+");
+	}
+
+	public void decrementBookingsTotal(User user) {
+		updateBookingTotal(user, "-");
+	}
+
+	public int getBookingsTotal(String email) {
+		int total = 0;
+
+		String sql = String.format(""
+				+ "SELECT %s "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
+				Field.BOOKING_TOTAL.name,
+				TABLE_NAME,
+				Field.EMAIL.name, email);
+
+		Connection connection = null;;
+		Statement statement = null;
+		ResultSet rs = null;
+
+		try {
+			connection = DBConnectionPool.getConnection();
+			statement = connection.createStatement();
+
+			rs = statement.executeQuery(sql);
+
+			while (rs.next())
+				total = rs.getInt(Field.BOOKING_TOTAL.name);
+
+		} catch (Exception e) {
+			logError(e, sql);
+			e.printStackTrace();
+			close(rs);
+			close(statement);
+		} finally {
+			close(rs);
+			close(statement);
+			DBConnectionPool.freeConnection(connection);
+		}
+		return total;
+	}
+
+	private void updateBookingTotal(User user, String modifier) {
+		int total = getBookingsTotal(user.getEmail());
+
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET %s='%s'"
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.BOOKING_TOTAL.name, modifier.equals("+") ? total + 1 : total - 1,
 				Field.EMAIL.name, user.getEmail());
 
 		try {
@@ -200,7 +277,9 @@ public class UserDao extends Dao {
 	}
 
 	public void setAccessCode(String accessCode) {
-		String sql = String.format("UPDATE access SET access_code='%s' ", accessCode);
+		String sql = String.format(""
+				+ "UPDATE access "
+				+ "SET access_code='%s' ", accessCode);
 		try {
 			executeUpdate(sql);
 		} catch (SQLException e) {
@@ -216,7 +295,9 @@ public class UserDao extends Dao {
 		PASSWORD("password", "VARCHAR(40)"),
 		ADMIN("admin", "VARCHAR(10)"),
 		JOIN_DATE("member_since", "DATE"),
-		LOGIN_TOTAL("number_of_logins", "INT");
+		LAST_LOGIN("last_login", "DATE"),
+		LOGIN_TOTAL("num_of_logins", "INT"),
+		BOOKING_TOTAL("num_of_bookings", "INT");
 
 		String name;
 		String type;

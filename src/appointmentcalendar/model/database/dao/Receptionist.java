@@ -88,6 +88,16 @@ public class Receptionist {
 	}
 
 	/**
+	 * Login and update login specific data for a User
+	 * 
+	 * @param user
+	 * @throws SQLException
+	 */
+	public void login(User user) {
+		userDao.incrementLoginTotalAndUpdateLastLogin(user);
+	}
+
+	/**
 	 * Return a user by email address
 	 * 
 	 * @param email
@@ -95,16 +105,6 @@ public class Receptionist {
 	 */
 	public User getUser(String email) {
 		return userDao.getUser(email);
-	}
-
-	/**
-	 * Increment a users total number of logins by one
-	 * 
-	 * @param user
-	 * @throws SQLException
-	 */
-	public void incrementLoginTotal(User user) {
-		userDao.incrementLoginTotal(user);
 	}
 
 	/**
@@ -118,7 +118,10 @@ public class Receptionist {
 	public int bookAppointment(String day, String time, User user) {
 		try {
 			calendarDao.bookAppointment(day, time, user);
+			userDao.incrementBookingsTotal(user);
+
 			LOG.info("Appointment booked: " + user.getEmail() + "= " + day + " @ " + time + user.getEmail());
+
 			return 1;
 		} catch (Exception e) {
 			LOG.error(e);
@@ -147,12 +150,13 @@ public class Receptionist {
 	 * 
 	 * @param appointment
 	 */
-	public void cancelAppointment(String appointment) {
+	public void cancelAppointment(String appointment, User user) {
 		String[] temp = appointment.split("@");
 		String date = temp[0].trim();
 		String time = temp[1].trim();
 		try {
 			calendarDao.cancelAppointment(date, time);
+			userDao.decrementBookingsTotal(user);
 			LOG.info("Appointment cancelled: " + date + " @ " + time);
 		} catch (SQLException e) {
 			e.printStackTrace();
