@@ -37,9 +37,12 @@ public class Login extends Action {
 		switch (responseCode) {
 			case 1:
 				User user = receptionist.getUser(email);
+				receptionist.incrementLoginTotal(user);
+
 				dataTransfer.setFirstName(user.getFirstName());
 				dataTransfer.setAppointments(receptionist.getAppointmentsForUser(email));
 				request.getSession().setAttribute("user", user);
+
 				LOG.info("User logged in - " + user);
 				break;
 			case 2:
@@ -50,7 +53,10 @@ public class Login extends Action {
 				break;
 			case 4:
 				User admin = receptionist.getUser(email);
+				receptionist.incrementLoginTotal(admin);
+
 				response.addCookie(buildAdminCookie());
+
 				LOG.info("Admin logged in - " + admin);
 				break;
 		}

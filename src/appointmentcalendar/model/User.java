@@ -9,6 +9,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
+	private int loginTotal;
 
 	public User() {}
 
@@ -56,6 +57,15 @@ public class User {
 	}
 
 	/**
+	 * Return the total number of logins for this User
+	 * 
+	 * @return total number of logins for this User
+	 */
+	public int getLoginTotal() {
+		return loginTotal;
+	}
+
+	/**
 	 * Sets the firstName for this User
 	 * 
 	 * @param firstName
@@ -93,6 +103,15 @@ public class User {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * Set the total number of logins for this User
+	 * 
+	 * @param loginTotal
+	 */
+	public void setLoginTotal(int loginTotal) {
+		this.loginTotal = loginTotal;
 	}
 
 	/*

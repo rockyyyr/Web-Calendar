@@ -76,10 +76,10 @@ public class Receptionist {
 	 *         4 - user is an admin
 	 * @throws SQLException
 	 */
-	public int checkUserCredentials(String userName, String password) {
+	public int checkUserCredentials(String email, String password) {
 		int responseCode = 0;
 		try {
-			responseCode = userDao.checkUserCredentials(userName, password);
+			responseCode = userDao.checkUserCredentials(email, password);
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -94,14 +94,17 @@ public class Receptionist {
 	 * @return the corresponding user
 	 */
 	public User getUser(String email) {
-		User user = new User();
-		try {
-			user = userDao.getUser(email);
-		} catch (Exception e) {
-			LOG.error(e);
-			e.printStackTrace();
-		}
-		return user;
+		return userDao.getUser(email);
+	}
+
+	/**
+	 * Increment a users total number of logins by one
+	 * 
+	 * @param user
+	 * @throws SQLException
+	 */
+	public void incrementLoginTotal(User user) {
+		userDao.incrementLoginTotal(user);
 	}
 
 	/**

@@ -1,9 +1,11 @@
 package appointmentcalendar.model.database.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
@@ -28,12 +30,13 @@ public class UserDao extends Dao {
 	 *             if a database access error occurs or the statement fails to execute
 	 */
 	public void add(User user) throws SQLException {
-		String sql = String.format("INSERT INTO %s values('%s', '%s', '%s', '%s', 'false')",
+		String sql = String.format("INSERT INTO %s values('%s', '%s', '%s', '%s', 'false', '%s')",
 				TABLE_NAME,
 				user.getFirstName(),
 				user.getLastName(),
 				user.getEmail(),
-				user.getPassword());
+				user.getPassword(),
+				Date.valueOf(LocalDate.now()));
 
 		executeUpdate(sql);
 	}
@@ -49,7 +52,7 @@ public class UserDao extends Dao {
 	 * @throws Exception
 	 *             if the result set has more than one result
 	 */
-	public User getUser(String email) throws SQLException, Exception {
+	public User getUser(String email) {
 		String sql = String.format("SELECT * FROM %s WHERE %s='%s'", TABLE_NAME, Field.EMAIL.name, email);
 
 		User user = new User();
@@ -69,6 +72,7 @@ public class UserDao extends Dao {
 				user.setLastName(rs.getString(Field.LAST_NAME.name));
 				user.setEmail(rs.getString(Field.EMAIL.name));
 				user.setPassword(rs.getString(Field.PASSWORD.name));
+				user.setLoginTotal(rs.getInt(Field.LOGIN_TOTAL.name));
 			}
 		} catch (Exception e) {
 			logError(e, sql);
@@ -144,6 +148,26 @@ public class UserDao extends Dao {
 		return responseCode;
 	}
 
+	/**
+	 * Increment a users total number of logins by one
+	 * 
+	 * @param user
+	 * @throws SQLException
+	 */
+	public void incrementLoginTotal(User user) {
+		String sql = String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",
+				TABLE_NAME,
+				Field.LOGIN_TOTAL.name, user.getLoginTotal() + 1,
+				Field.EMAIL.name, user.getEmail());
+
+		try {
+			executeUpdate(sql);
+		} catch (SQLException e) {
+			logError(e, sql);
+			e.printStackTrace();
+		}
+	}
+
 	public String getAccessCode() {
 		String accessCode = "";
 		String sql = String.format("SELECT * FROM access");
@@ -190,7 +214,9 @@ public class UserDao extends Dao {
 		LAST_NAME("lastName", "VARCHAR(40)"),
 		EMAIL("email", "VARCHAR(80) PRIMARY KEY "),
 		PASSWORD("password", "VARCHAR(40)"),
-		ADMIN("admin", "VARCHAR(10)");
+		ADMIN("admin", "VARCHAR(10)"),
+		JOIN_DATE("member_since", "DATE"),
+		LOGIN_TOTAL("number_of_logins", "INT");
 
 		String name;
 		String type;
