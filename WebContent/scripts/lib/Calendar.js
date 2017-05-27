@@ -14,6 +14,7 @@ var Calendar = function(){
 	initTime = function(id){
 		hideInfoMessage();
 	    $('#time-select').find('option').remove().end();
+	    $('#time-select').append("<option selected disabled>Choose a time</option>");
 	    
 	    console.log("id= " + id);
 	    

@@ -27,12 +27,21 @@ $(document).ready(function () {
 
     $('#book-button').on('click', function () {
         Appointments.book();
+        disableBookButton();
     });
 
     ////////////// CSS  ///////////////
     $('select').css('color', 'white');
 
 });
+
+function enableBookButton(){
+	$('#book-button').prop('disabled', false);
+}
+
+function disableBookButton(){
+	$('#book-button').prop('disabled', true);
+}
 
 
 // ////////////////////// View Toggling ////////////////////////////

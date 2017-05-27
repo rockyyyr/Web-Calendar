@@ -147,11 +147,11 @@
 				
 				<div class="form-group">
 					<label class="random-text-color" for="time-select">Select the time:</label> 
-					<select id="time-select"></select>
+					<select id="time-select" onchange="enableBookButton()"></select>
 				</div>
 				
 				<div class="button-container">
-					<input id="book-button" class="button float-left" type="submit" value="Book">
+					<input id="book-button" class="button float-left" type="submit" value="Book" disabled>
 					<div id="booking-info-message" class="info-message hide-element random-text-color"></div>
 				</div>
 			</div>
