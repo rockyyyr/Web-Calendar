@@ -1,17 +1,18 @@
 package appointmentcalendar.model.database.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
 import appointmentcalendar.utils.DateSorter;
-import appointmentcalendar.utils.Day;
 
 /**
  * CalendarDao.
@@ -32,9 +33,12 @@ public class CalendarDao extends Dao {
 	 *            the day to add
 	 * @throws SQLException
 	 */
-	public void addDay(Day day) throws SQLException {
-		String sql = String.format("INSERT INTO %s (%s) VALUES ('%s')",
-				TABLE_NAME, Field.DAY.name, day.getDateAndDay());
+	public void addDay(LocalDate day) throws SQLException {
+		String sql = String.format(""
+				+ "INSERT INTO %s (%s) "
+				+ "VALUES ('%s')",
+				TABLE_NAME, Field.DAY.name,
+				Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
@@ -50,35 +54,51 @@ public class CalendarDao extends Dao {
 	 *            The user who is booking
 	 * @throws SQLException
 	 */
-	public void bookAppointment(String day, String time, User user) throws SQLException {
-		String sql = String.format("UPDATE %s SET `%s`='%s' WHERE %s='%s';",
+	public void bookAppointment(LocalDate day, String time, User user) throws SQLException {
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET `%s`='%s' "
+				+ "WHERE %s='%s';",
 				TABLE_NAME,
 				time, user.getEmail(),
-				Field.DAY.name, day);
+				Field.DAY.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
 
-	public void cancelAppointment(String day, String time) throws SQLException {
-		String sql = String.format("UPDATE %s SET `%s`=NULL WHERE %s='%s';",
+	public void cancelAppointment(LocalDate day, String time) throws SQLException {
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET `%s`=NULL "
+				+ "WHERE %s='%s';",
 				TABLE_NAME,
 				time,
-				Field.DAY.name, day);
+				Field.DAY.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
 
-	public void scheduleBreaks(String day, String breakList) throws SQLException {
-		String sql = String.format("UPDATE %s SET %s WHERE %s='%s';",
-				TABLE_NAME, breakList, Field.DAY.name, day);
+	public void scheduleBreaks(LocalDate day, String breakList) throws SQLException {
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET %s "
+				+ "WHERE %s='%s';",
+				TABLE_NAME,
+				breakList,
+				Field.DAY.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
 
-	public List<String> getAvailableTimesFromSpecificDay(String day) throws SQLException {
+	public List<String> getAvailableTimesFromSpecificDay(LocalDate day) throws SQLException {
 		List<String> times = new ArrayList<>();
 
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'", TABLE_NAME, Field.DAY.name, day);
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.DAY.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -115,7 +135,11 @@ public class CalendarDao extends Dao {
 	public List<String> getAvailableDays() throws SQLException {
 		List<String> days = new ArrayList<>();
 
-		String sql = String.format("SELECT %s  FROM %s", Field.DAY.name, TABLE_NAME);
+		String sql = String.format(""
+				+ "SELECT %s "
+				+ "FROM %s",
+				Field.DAY.name,
+				TABLE_NAME);
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -146,7 +170,9 @@ public class CalendarDao extends Dao {
 	public List<String> getAppointmentsForUser(String email) throws SQLException {
 		List<String> appointments = new ArrayList<>();
 
-		String sql = String.format("SELECT * FROM %s ", TABLE_NAME);
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s ", TABLE_NAME);
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -182,12 +208,15 @@ public class CalendarDao extends Dao {
 		return appointments;
 	}
 
-	public List<String> getNextAppointments(int totalListSize, String day, String time) throws SQLException {
+	public List<String> getNextAppointments(int totalListSize, LocalDate day, String time) throws SQLException {
 		List<String> appointments = new ArrayList<>();
 
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'",
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, day);
+				Field.DAY.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -235,10 +264,14 @@ public class CalendarDao extends Dao {
 		return appointments;
 	}
 
-	public List<String> getAppointmentsForSpecificDay(String day) throws SQLException {
+	public List<String> getAppointmentsForSpecificDay(LocalDate day) throws SQLException {
 		List<String> appointments = new ArrayList<>();
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'",
-				TABLE_NAME, Field.DAY.name, day);
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.DAY.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -273,18 +306,24 @@ public class CalendarDao extends Dao {
 		return appointments;
 	}
 
-	public void deleteDay(String day) throws SQLException {
-		String sql = String.format("DELETE FROM %s WHERE %s='%s'",
+	public void deleteDay(LocalDate day) throws SQLException {
+		String sql = String.format(""
+				+ "DELETE FROM %s "
+				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, day);
+				Field.DAY.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
 
-	public List<String> getAllTimeSlots(String day) {
+	public List<String> getAllTimeSlots(LocalDate day) {
 		List<String> timeSlots = new ArrayList<>();
-		String sql = String.format("SELECT * FROM %s WHERE %s='%s'",
-				TABLE_NAME, Field.DAY.name, day);
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.DAY.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -317,7 +356,7 @@ public class CalendarDao extends Dao {
 		return timeSlots;
 	}
 
-	public void setTimeSlots(String timeSlots, String day) throws SQLException {
+	public void setTimeSlots(String timeSlots, LocalDate day) throws SQLException {
 		String[] arr = timeSlots.split("\\.");
 		String modifier = "";
 
@@ -331,8 +370,13 @@ public class CalendarDao extends Dao {
 
 		modifier = modifier.substring(0, modifier.length() - 2); // remove trailing comma
 
-		String sql = String.format("UPDATE %s SET %s WHERE %s='%s'",
-				TABLE_NAME, modifier, Field.DAY.name, day);
+		String sql = String.format(""
+				+ "UPDATE %s "
+				+ "SET %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				modifier,
+				Field.DAY.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}

@@ -42,7 +42,7 @@ public class DatabaseAutomaticUpdater {
 			currentDays = receptionist.getAvailableDays();
 
 			deletePreviousDay(currentDays);
-			Day newDay = addNewDay(daysOff, receptionist.getAvailableDays());
+			LocalDate newDay = addNewDay(daysOff, receptionist.getAvailableDays());
 			scheduleBreaksForNewDay(breaks, newDay);
 
 			success = true;
@@ -65,7 +65,7 @@ public class DatabaseAutomaticUpdater {
 	 * @return the new day to be added
 	 * @throws SQLException
 	 */
-	private Day addNewDay(List<String> daysOff, List<String> currentDays) throws SQLException {
+	private LocalDate addNewDay(List<String> daysOff, List<String> currentDays) throws SQLException {
 		LocalDate day14 = LocalDate.now().plusDays(CALENDAR_SIZE);
 
 		if (daysOff.size() > 0) {
@@ -98,13 +98,13 @@ public class DatabaseAutomaticUpdater {
 		day.setDay(day14);
 
 		if (currentDays.size() <= CALENDAR_SIZE) {
-			receptionist.addDay(day);
+			receptionist.addDay(day.getDate());
 			LOG.info("Adding new day: " + day.getDateAndDay());
 		} else {
 			LOG.info("Attempted to add new day: " + day.getDateAndDay() + " but the calendar was full");
 		}
 
-		return day;
+		return day.getDate();
 	}
 
 	/**
@@ -116,10 +116,10 @@ public class DatabaseAutomaticUpdater {
 	 *            the day to schedule breaks for
 	 * @throws SQLException
 	 */
-	private void scheduleBreaksForNewDay(List<String> breaks, Day day) throws SQLException {
+	private void scheduleBreaksForNewDay(List<String> breaks, LocalDate day) throws SQLException {
 		if (breaks.size() > 0) {
 			String breakSQLString = generateBreakSQLString(breaks);
-			receptionist.scheduleBreaks(day.getDateAndDay(), breakSQLString);
+			receptionist.scheduleBreaks(day, breakSQLString);
 		}
 	}
 
@@ -131,11 +131,11 @@ public class DatabaseAutomaticUpdater {
 	 * @throws SQLException
 	 */
 	private void deletePreviousDay(List<String> currentDays) throws SQLException {
-		Day yesterday = new Day(LocalDate.now().minusDays(1));
+		LocalDate yesterday = LocalDate.now().minusDays(1);
 
 		for (int i = 0; i < currentDays.size(); i++) {
-			if (yesterday.getDateAndDay().equals(currentDays.get(i))) {
-				receptionist.deleteDay(yesterday.getDateAndDay());
+			if (yesterday.equals(currentDays.get(i))) {
+				receptionist.deleteDay(yesterday);
 			}
 		}
 	}

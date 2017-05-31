@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import appointmentcalendar.model.User;
-import appointmentcalendar.utils.Day;
 import appointmentcalendar.utils.TimeBlock;
 
 /**
@@ -116,8 +115,9 @@ public class Receptionist {
 	 * @return 1 if the booking was successful, 0 otherwise.
 	 */
 	public int bookAppointment(String day, String time, User user) {
+
 		try {
-			calendarDao.bookAppointment(day, time, user);
+			calendarDao.bookAppointment(getDate(day), time, user);
 			userDao.incrementBookingsTotal(user);
 
 			LOG.info("Appointment booked: " + user.getEmail() + "= " + day + " @ " + time + user.getEmail());
@@ -127,6 +127,25 @@ public class Receptionist {
 			LOG.error(e);
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	/**
+	 * Cancel an appointment
+	 * 
+	 * @param appointment
+	 */
+	public void cancelAppointment(String appointment, User user) {
+		String[] temp = appointment.split("@");
+		String date = temp[0].trim();
+		String time = temp[1].trim();
+
+		try {
+			calendarDao.cancelAppointment(getDate(date), time);
+			userDao.decrementBookingsTotal(user);
+			LOG.info("Appointment cancelled: " + date + " @ " + time);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -146,29 +165,11 @@ public class Receptionist {
 	}
 
 	/**
-	 * Cancel an appointment
-	 * 
-	 * @param appointment
-	 */
-	public void cancelAppointment(String appointment, User user) {
-		String[] temp = appointment.split("@");
-		String date = temp[0].trim();
-		String time = temp[1].trim();
-		try {
-			calendarDao.cancelAppointment(date, time);
-			userDao.decrementBookingsTotal(user);
-			LOG.info("Appointment cancelled: " + date + " @ " + time);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Add a day to the calendar
 	 * 
 	 * @param day
 	 */
-	public void addDay(Day day) {
+	public void addDay(LocalDate day) {
 		try {
 			calendarDao.addDay(day);
 		} catch (SQLException e) {
@@ -183,7 +184,7 @@ public class Receptionist {
 	 * @param day
 	 * @param breakList
 	 */
-	public void scheduleBreaks(String day, String breakList) {
+	public void scheduleBreaks(LocalDate day, String breakList) {
 		try {
 			calendarDao.scheduleBreaks(day, breakList);
 		} catch (SQLException e) {
@@ -197,7 +198,7 @@ public class Receptionist {
 	 * 
 	 * @param day
 	 */
-	public void deleteDay(String day) {
+	public void deleteDay(LocalDate day) {
 		try {
 			calendarDao.deleteDay(day);
 		} catch (SQLException e) {
@@ -226,8 +227,9 @@ public class Receptionist {
 	 */
 	public List<String> getAvailableTimesFromDay(String day) {
 		List<String> result = new ArrayList<>();
+
 		try {
-			result = calendarDao.getAvailableTimesFromSpecificDay(day);
+			result = calendarDao.getAvailableTimesFromSpecificDay(getDate(day));
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -242,13 +244,13 @@ public class Receptionist {
 	 * @return a list of the next appointments for today
 	 */
 	public List<String> getNextAppointments(int listSize) {
-		String day = new Day(LocalDate.now()).getDateAndDay();
+		LocalDate date = LocalDate.now();
 		String time = new TimeBlock(LocalTime.now().truncatedTo(ChronoUnit.HOURS)).getFormattedTime();
 
 		List<String> result = new ArrayList<>();
 
 		try {
-			result = formatAppointmentList(calendarDao.getNextAppointments(listSize, day, time));
+			result = formatAppointmentList(calendarDao.getNextAppointments(listSize, date, time));
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -262,8 +264,9 @@ public class Receptionist {
 	 */
 	public List<String> getAppointmentsForSpecificDay(String day) {
 		List<String> result = new ArrayList<>();
+
 		try {
-			result = formatAppointmentList(calendarDao.getAppointmentsForSpecificDay(day));
+			result = formatAppointmentList(calendarDao.getAppointmentsForSpecificDay(getDate(day)));
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -391,7 +394,7 @@ public class Receptionist {
 	 * @return a list of all time slots for the specified day
 	 */
 	public List<String> getTimeSlots(String day) {
-		return calendarDao.getAllTimeSlots(day);
+		return calendarDao.getAllTimeSlots(getDate(day));
 	}
 
 	/**
@@ -403,7 +406,7 @@ public class Receptionist {
 	 */
 	public void setTimeSlots(String timeSlots, String day) {
 		try {
-			calendarDao.setTimeSlots(timeSlots, day);
+			calendarDao.setTimeSlots(timeSlots, getDate(day));
 			LOG.info("Time slots edited");
 		} catch (Exception e) {
 			LOG.error(e);
@@ -434,6 +437,14 @@ public class Receptionist {
 			userList.add(bookingInfo);
 		}
 		return userList;
+	}
+
+	/**
+	 * @param day
+	 * @return LocalDate object from date string
+	 */
+	private LocalDate getDate(String day) {
+		return LocalDate.parse(day);
 	}
 
 }
