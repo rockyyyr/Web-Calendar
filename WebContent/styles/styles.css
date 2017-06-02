@@ -6,6 +6,10 @@
 	font-size: 12px;
 }
 
+.font-13{
+	font-size: 13px;
+}
+
 .font-14 {
 	font-size: 14px;
 }
@@ -140,6 +144,10 @@ option {
 
 #forgot {
 	margin-top: 10px;
+}
+
+.delete-appointment{
+	cursor: pointer;
 }
 
 

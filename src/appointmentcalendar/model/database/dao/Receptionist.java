@@ -3,9 +3,12 @@ package appointmentcalendar.model.database.dao;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +22,9 @@ import appointmentcalendar.utils.TimeBlock;
  * Receptionist. Service layer that handles all exchanges involving persisted data
  */
 public class Receptionist {
+
+	public static final String DATE_FORMAT = "EEE d MMMM yyyy";
+	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale.ENGLISH);
 
 	private static final Logger LOG = LogManager.getLogger();
 
@@ -208,17 +214,40 @@ public class Receptionist {
 	}
 
 	/**
-	 * @return a list of all the days stored in the calendar
+	 * @return a list of all the days stored in the calendar as formatted date strings
 	 */
 	public List<String> getAvailableDays() {
 		List<String> result = new ArrayList<>();
+
+		for (LocalDate date : getAvailableDaysAsLocalDate())
+			result.add(date.format(DATE_FORMATTER));
+
+		return result;
+	}
+
+	/**
+	 * @return a list of all the days stored in the calendar as LocalDate objects
+	 */
+	public List<LocalDate> getAvailableDaysAsLocalDate() {
+		List<LocalDate> availableDays = new ArrayList<>();
+
 		try {
-			result = calendarDao.getAvailableDays();
+			availableDays = calendarDao.getAvailableDays();
 		} catch (Exception e) {
 			LOG.error(e);
 			e.printStackTrace();
 		}
-		return result;
+
+		availableDays.sort(new Comparator<LocalDate>() {
+
+			@Override
+			public int compare(LocalDate a, LocalDate b) {
+				return a.compareTo(b);
+			}
+
+		});
+
+		return availableDays;
 	}
 
 	/**
@@ -444,7 +473,7 @@ public class Receptionist {
 	 * @return LocalDate object from date string
 	 */
 	private LocalDate getDate(String day) {
-		return LocalDate.parse(day);
+		return LocalDate.parse(day, DATE_FORMATTER);
 	}
 
 }

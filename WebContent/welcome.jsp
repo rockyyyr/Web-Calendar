@@ -160,8 +160,8 @@
 		</div>
 		<!-- booking form -->
 		
-		<div id="forgot-password-form" class="hide-element">
 		
+		<div id="forgot-password-form" class="hide-element">
 			<div class="form-header font random-text-color">Password Recovery</div>
 			<form id="recover-email-form" onsubmit="User.recoverPassword('recovery-email'); return false">
 				<div class="form-group">
@@ -174,7 +174,7 @@
 				</div>
 			</form>
 		</div>
-
+		
 	</div>
 	<!-- ui container -->
 

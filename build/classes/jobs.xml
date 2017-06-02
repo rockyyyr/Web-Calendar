@@ -9,13 +9,13 @@
 	<schedule>
 		<job>
 			<name>DatabaseUpdateTask</name>
-			<job-class>appointmentcalendar.model.database.DatabaseUpdateTask</job-class>
+			<job-class>appointmentcalendar.model.database.DailyDatabaseUpdater</job-class>
 		</job>
 		<trigger>
 			<cron>
 				<name>DatabaseUpdateTrigger</name>
 				<job-name>DatabaseUpdateTask</job-name>
-				<cron-expression>0 1 2 1/1 * ? *</cron-expression>
+				<cron-expression>0 1 0 1/1 * ? *</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

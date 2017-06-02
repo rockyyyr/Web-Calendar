@@ -69,7 +69,10 @@ var Appointments = function(){
 	addAppointmentElement = function(element){
 		var id = "a" + element.replace(/\s+/g, '').replace(/@/g, '').replace(/:/g, '').replace(/-/g, '');
 	    $('#appointment-list').append(
-	        "<div id='" + id + "'>" + element + "<a class='float-right' onclick='Appointments.cancel(this)'><b>X</b></a></div>");
+	        "<div id='" + id + "'>" 
+	        + element 
+	        + "<a class='delete-appointment float-right' onmouseover='' onclick='Appointments.cancel(this)'><b>X</b></a>"
+	        + "</div>");
 	};
 	
 	updateAppointmentHeading = function(){

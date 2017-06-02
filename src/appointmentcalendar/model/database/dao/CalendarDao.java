@@ -12,7 +12,6 @@ import java.util.List;
 
 import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
-import appointmentcalendar.utils.DateSorter;
 
 /**
  * CalendarDao.
@@ -37,7 +36,7 @@ public class CalendarDao extends Dao {
 		String sql = String.format(""
 				+ "INSERT INTO %s (%s) "
 				+ "VALUES ('%s')",
-				TABLE_NAME, Field.DAY.name,
+				TABLE_NAME, Field.DATE.name,
 				Date.valueOf(day));
 
 		executeUpdate(sql);
@@ -61,7 +60,7 @@ public class CalendarDao extends Dao {
 				+ "WHERE %s='%s';",
 				TABLE_NAME,
 				time, user.getEmail(),
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
@@ -73,7 +72,7 @@ public class CalendarDao extends Dao {
 				+ "WHERE %s='%s';",
 				TABLE_NAME,
 				time,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
@@ -85,7 +84,7 @@ public class CalendarDao extends Dao {
 				+ "WHERE %s='%s';",
 				TABLE_NAME,
 				breakList,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
@@ -98,7 +97,7 @@ public class CalendarDao extends Dao {
 				+ "FROM %s "
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -132,13 +131,13 @@ public class CalendarDao extends Dao {
 		return times;
 	}
 
-	public List<String> getAvailableDays() throws SQLException {
-		List<String> days = new ArrayList<>();
+	public List<LocalDate> getAvailableDays() throws SQLException {
+		List<LocalDate> days = new ArrayList<>();
 
 		String sql = String.format(""
 				+ "SELECT %s "
 				+ "FROM %s",
-				Field.DAY.name,
+				Field.DATE.name,
 				TABLE_NAME);
 
 		Connection connection = null;;
@@ -152,7 +151,7 @@ public class CalendarDao extends Dao {
 			rs = statement.executeQuery(sql);
 
 			while (rs.next())
-				days.add(rs.getString(Field.DAY.name));
+				days.add(rs.getDate(Field.DATE.name).toLocalDate());
 
 		} catch (Exception e) {
 			logError(e, sql);
@@ -163,7 +162,7 @@ public class CalendarDao extends Dao {
 			DBConnectionPool.freeConnection(connection);
 		}
 
-		days.sort(DateSorter.sort());
+		// days.sort(DateSorter.sort());
 		return days;
 	}
 
@@ -192,8 +191,10 @@ public class CalendarDao extends Dao {
 					String value = rs.getString(label);
 
 					if (value != null && value.equals(email)) {
-						String day = rs.getString(1);
-						appointments.add(day + " @ " + rsmd.getColumnLabel(count - 1));
+						LocalDate day = rs.getDate(1).toLocalDate();
+						appointments.add(
+								day.format(Receptionist.DATE_FORMATTER)
+										+ " @ " + rsmd.getColumnLabel(count - 1));
 					}
 				}
 			}
@@ -216,7 +217,7 @@ public class CalendarDao extends Dao {
 				+ "FROM %s "
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -271,7 +272,7 @@ public class CalendarDao extends Dao {
 				+ "FROM %s "
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -311,7 +312,7 @@ public class CalendarDao extends Dao {
 				+ "DELETE FROM %s "
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
@@ -323,7 +324,7 @@ public class CalendarDao extends Dao {
 				+ "FROM %s "
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		Connection connection = null;;
 		Statement statement = null;
@@ -376,13 +377,13 @@ public class CalendarDao extends Dao {
 				+ "WHERE %s='%s'",
 				TABLE_NAME,
 				modifier,
-				Field.DAY.name, Date.valueOf(day));
+				Field.DATE.name, Date.valueOf(day));
 
 		executeUpdate(sql);
 	}
 
 	public enum Field {
-		DAY("day", "VARCHAR(20)");
+		DATE("date", "DATE");
 
 		String name;
 		String type;

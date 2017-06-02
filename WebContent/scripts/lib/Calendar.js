@@ -19,9 +19,14 @@ var Calendar = function(){
 	    console.log("id= " + id);
 	    
 	    Data.give('timeInit', [id], function(data){
-	    	$.each(data, function (index, element) {
-	    		$('#time-select').append("<option>" + element);
-	    	})
+	    	if(data.length === 0){
+	    		$('#time-select').find('option').remove().end();
+	    	    $('#time-select').append("<option selected disabled>No Available Times</option>");
+	    	} else {
+	    		$.each(data, function (index, element) {
+	    			$('#time-select').append("<option>" + element);
+	    		});
+	    	}
 	    }, true);
 	};
 	

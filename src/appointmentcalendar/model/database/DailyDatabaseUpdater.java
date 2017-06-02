@@ -7,9 +7,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * DatabaseUpdateTask.
+ * DailyDatabaseUpdater.
  */
-public class DatabaseUpdateTask implements Job {
+public class DailyDatabaseUpdater implements Job {
 
 	private Logger LOG = LogManager.getLogger();
 
@@ -19,12 +19,15 @@ public class DatabaseUpdateTask implements Job {
 	 */
 	@Override
 	public void execute(JobExecutionContext ex) throws JobExecutionException {
-		DatabaseAutomaticUpdater updater = new DatabaseAutomaticUpdater();
+		AutomaticCalendarUpdater updater = new AutomaticCalendarUpdater();
 		boolean success = updater.performDailyUpdate();
 
 		if (success) {
-			System.out.println("DatabaseUpdateTask executed.");
-			LOG.info("DatabaseUpdateTask executed.");
+			System.out.println("DailyDatabaseUpdater executed.");
+			LOG.info("DailyDatabaseUpdater executed.");
+		} else {
+			System.out.println("DailyDatabaseUpdater failed to execute properly.");
+			LOG.info("DailyDatabaseUpdater failed to execute properly.");
 		}
 	}
 

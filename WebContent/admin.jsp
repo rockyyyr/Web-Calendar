@@ -64,7 +64,7 @@
 				<select id="day-sel" class="day-select-list"></select>
 			</div>
 			
-			<div id="all-appointments" class="random-text-color font-14 float-left"></div>
+			<div id="all-appointments" class="random-text-color font-13 float-left"></div>
 			<div class="random-text-color font-14 float-right">
 				<button id="show-hide-button" class="button small-button margin-bottom"></button>
 			</div>
