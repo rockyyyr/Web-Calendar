@@ -24,7 +24,7 @@ public class Booking extends Action {
 
 		User user = (User) request.getSession().getAttribute("user");
 
-		int responseCode = receptionist.bookAppointment(day, time, user);
+		int responseCode = service.bookAppointment(day, time, user);
 
 		responseDto.setResponseCode(responseCode);
 		responseDto.setDay(day);

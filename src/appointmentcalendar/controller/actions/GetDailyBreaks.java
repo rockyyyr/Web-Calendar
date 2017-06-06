@@ -16,7 +16,7 @@ public class GetDailyBreaks extends Action {
 	 */
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getDailyBreaks(), response);
+		Responder.send(service.getDailyBreaks(), response);
 	}
 
 }

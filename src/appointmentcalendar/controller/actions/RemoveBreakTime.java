@@ -19,7 +19,7 @@ public class RemoveBreakTime extends Action {
 		Data data = new Data(request);
 		String time = data.get("time");
 
-		receptionist.scheduleNonBreak(time);
+		service.scheduleNonBreak(time);
 	}
 
 }

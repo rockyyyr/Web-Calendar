@@ -16,7 +16,7 @@ public class NextAppointments extends Action {
 	 */
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getNextAppointments(5), response);
+		Responder.send(service.getNextAppointments(5), response);
 	}
 
 }

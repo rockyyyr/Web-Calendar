@@ -8,12 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import appointmentcalendar.controller.DBConnectionPool;
+import appointmentcalendar.model.database.DBConnectionPool;
 
 /**
  * WorkScheduleDao.
  */
-public class WorkScheduleDao extends Dao {
+public final class WorkScheduleDao extends Dao {
 
 	private static final String BREAKS_TABLE_NAME = "breaks";
 	private static final String DAYS_TABLE_NAME = "workdays";

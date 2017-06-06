@@ -16,7 +16,7 @@ public class GetWorkingHours extends Action {
 	 */
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getWorkingHours(), response);
+		Responder.send(service.getWorkingHours(), response);
 	}
 
 }

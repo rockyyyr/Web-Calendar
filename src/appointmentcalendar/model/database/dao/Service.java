@@ -19,9 +19,9 @@ import appointmentcalendar.model.User;
 import appointmentcalendar.utils.TimeBlock;
 
 /**
- * Receptionist. Service layer that handles all exchanges involving persisted data
+ * Service layer that handles all exchanges involving persisted data
  */
-public class Receptionist {
+public class Service {
 
 	public static final String DATE_FORMAT = "EEE d MMMM yyyy";
 	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale.ENGLISH);
@@ -31,11 +31,13 @@ public class Receptionist {
 	private UserDao userDao;
 	private CalendarDao calendarDao;
 	private WorkScheduleDao workScheduleDao;
+	private RecordDao recordDao;
 
-	public Receptionist() {
+	public Service() {
 		userDao = new UserDao();
 		calendarDao = new CalendarDao();
 		workScheduleDao = new WorkScheduleDao();
+		recordDao = new RecordDao();
 	}
 
 	/**
@@ -441,6 +443,23 @@ public class Receptionist {
 			LOG.error(e);
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Permanently store a day from the calendar
+	 * 
+	 * @param date
+	 */
+	public boolean storeDayFromCalendar(LocalDate date) {
+		boolean success = false;
+		try {
+			recordDao.add(date);
+			success = true;
+		} catch (SQLException e) {
+			LOG.error(e);
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	/**

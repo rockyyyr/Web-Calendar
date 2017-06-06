@@ -18,7 +18,7 @@
 	
 	<servlet>
 		<servlet-name>DBConnectionPool</servlet-name>
-		<servlet-class>appointmentcalendar.controller.DBConnectionPool</servlet-class>
+		<servlet-class>appointmentcalendar.model.database.DBConnectionPool</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

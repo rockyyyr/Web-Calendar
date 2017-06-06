@@ -1,4 +1,4 @@
-package appointmentcalendar.controller;
+package appointmentcalendar.model.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;

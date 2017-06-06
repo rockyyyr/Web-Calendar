@@ -33,7 +33,7 @@ public class Register extends Action {
 		String password = data.get("reg-password");
 		String access = data.get("reg-access");
 
-		int responseCode = receptionist.createUser(firstName, lastName, email, password, access);
+		int responseCode = service.createUser(firstName, lastName, email, password, access);
 		responseCodeDto.setResponseCode(responseCode);
 
 		Responder.send(responseCodeDto, response);

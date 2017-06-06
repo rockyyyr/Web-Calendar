@@ -1,4 +1,4 @@
-package appointmentcalendar.model.database;
+package appointmentcalendar.model.database.task;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -8,36 +8,36 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import appointmentcalendar.model.database.dao.Receptionist;
+import appointmentcalendar.model.database.dao.Service;
 
 /**
- * AutomaticCalendarUpdater.
+ * CalendarUpdateTask.
  */
-public class AutomaticCalendarUpdater {
+public class CalendarUpdateTask implements DailyTask {
 
 	private static Logger LOG = LogManager.getLogger();
 	private static final int CALENDAR_SIZE = 4;
 
-	private Receptionist receptionist;
+	private Service service;
 
-	private boolean success;
-
-	public AutomaticCalendarUpdater() {
-		receptionist = new Receptionist();
-		success = false;
+	public CalendarUpdateTask() {
+		service = new Service();
 	}
 
 	/**
 	 * Perform the daily update on the database.
 	 * The day that has past gets deleted and a new day is added at the end of the schedule
 	 */
+	@Override
 	public boolean performDailyUpdate() {
 		List<String> daysOff = null;
 		List<LocalDate> currentSchedule = null;
 
+		boolean success = false;
+
 		try {
-			daysOff = receptionist.getDaysOffSchedule();
-			currentSchedule = receptionist.getAvailableDaysAsLocalDate();
+			daysOff = service.getDaysOffSchedule();
+			currentSchedule = service.getAvailableDaysAsLocalDate();
 
 			currentSchedule = deletePreviousDay(currentSchedule);
 			LocalDate newDay = generateNextWorkDay(daysOff, currentSchedule);
@@ -59,10 +59,10 @@ public class AutomaticCalendarUpdater {
 	 * @param currentSchedule
 	 */
 	private void addNewDay(LocalDate newDay, List<LocalDate> currentSchedule) {
-		String formattedDay = newDay.format(Receptionist.DATE_FORMATTER);
+		String formattedDay = newDay.format(Service.DATE_FORMATTER);
 
 		if (currentSchedule.size() <= CALENDAR_SIZE) {
-			receptionist.addDay(newDay);
+			service.addDay(newDay);
 			LOG.info("Adding new day: " + formattedDay);
 		} else {
 			LOG.info("Attempted to add new day: " + formattedDay + " but the calendar was full");
@@ -109,7 +109,7 @@ public class AutomaticCalendarUpdater {
 
 		while (it.hasNext()) {
 			if (yesterday.equals(it.next())) {
-				receptionist.deleteDay(yesterday);
+				service.deleteDay(yesterday);
 				it.remove();
 			}
 		}

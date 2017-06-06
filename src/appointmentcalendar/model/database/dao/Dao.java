@@ -8,7 +8,7 @@ import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import appointmentcalendar.controller.DBConnectionPool;
+import appointmentcalendar.model.database.DBConnectionPool;
 
 public abstract class Dao {
 

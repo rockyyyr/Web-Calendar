@@ -20,8 +20,8 @@ public class SetDaysOff extends Action {
 		String daysOff = data.get("daysOff");
 		String workDays = data.get("workDays");
 
-		receptionist.scheduleDayOff(daysOff);
-		receptionist.scheduleWorkDay(workDays);
+		service.scheduleDayOff(daysOff);
+		service.scheduleWorkDay(workDays);
 	}
 
 }

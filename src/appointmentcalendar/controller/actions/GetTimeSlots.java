@@ -23,7 +23,7 @@ public class GetTimeSlots extends Action {
 		Data data = new Data(request);
 		String day = data.get("day");
 
-		Responder.send(receptionist.getTimeSlots(day), response);
+		Responder.send(service.getTimeSlots(day), response);
 	}
 
 }

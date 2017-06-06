@@ -16,7 +16,7 @@ public class GetDaysOff extends Action {
 	 */
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getDaysOffSchedule(), response);
+		Responder.send(service.getDaysOffSchedule(), response);
 	}
 
 }

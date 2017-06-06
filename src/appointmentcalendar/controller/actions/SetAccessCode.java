@@ -22,7 +22,7 @@ public class SetAccessCode extends Action {
 		Data data = new Data(request);
 		String code = data.get("accessCode");
 
-		receptionist.setAccessCode(code);
+		service.setAccessCode(code);
 	}
 
 }

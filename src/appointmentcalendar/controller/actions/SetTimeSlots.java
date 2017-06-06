@@ -24,7 +24,7 @@ public class SetTimeSlots extends Action {
 		String timeSlots = data.get("timeSlots");
 		String day = data.get("day");
 
-		receptionist.setTimeSlots(timeSlots, day);
+		service.setTimeSlots(timeSlots, day);
 	}
 
 }

@@ -20,7 +20,7 @@ public class RecoverPassword extends Action {
 		Data data = new Data(request);
 		String email = data.get("recovery-email");
 
-		User user = receptionist.getUser(email);
+		User user = service.getUser(email);
 
 		int responseCode = 2;
 

@@ -32,15 +32,15 @@ public class Login extends Action {
 		String email = data.get("login-email");
 		String password = data.get("login-password");
 
-		int responseCode = receptionist.checkUserCredentials(email, password);
+		int responseCode = service.checkUserCredentials(email, password);
 
 		switch (responseCode) {
 			case 1:
-				User user = receptionist.getUser(email);
-				receptionist.login(user);
+				User user = service.getUser(email);
+				service.login(user);
 
 				dataTransfer.setFirstName(user.getFirstName());
-				dataTransfer.setAppointments(receptionist.getAppointmentsForUser(email));
+				dataTransfer.setAppointments(service.getAppointmentsForUser(email));
 				request.getSession().setAttribute("user", user);
 
 				LOG.info("User logged in - " + user);
@@ -52,8 +52,8 @@ public class Login extends Action {
 				LOG.info("User attempted login but the email is not registered");
 				break;
 			case 4:
-				User admin = receptionist.getUser(email);
-				receptionist.login(admin);
+				User admin = service.getUser(email);
+				service.login(admin);
 
 				response.addCookie(buildAdminCookie());
 

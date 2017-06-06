@@ -15,6 +15,6 @@ public class CancelAppointment extends Action {
 
 		User user = (User) request.getSession().getAttribute("user");
 
-		receptionist.cancelAppointment(appointment, user);
+		service.cancelAppointment(appointment, user);
 	}
 }

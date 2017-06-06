@@ -12,7 +12,7 @@ public class DayInit extends Action {
 
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getAvailableDays(), response);
+		Responder.send(service.getAvailableDays(), response);
 	}
 
 }

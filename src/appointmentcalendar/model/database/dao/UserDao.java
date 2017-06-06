@@ -9,13 +9,13 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
+import appointmentcalendar.model.database.DBConnectionPool;
 
 /**
  * UserDao.
  */
-public class UserDao extends Dao {
+public final class UserDao extends Dao {
 
 	private static final String TABLE_NAME = "users";
 

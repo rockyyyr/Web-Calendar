@@ -19,7 +19,7 @@ public class GetAccessCode extends Action {
 	 */
 	@Override
 	public void respond(HttpServletRequest request, HttpServletResponse response) {
-		Responder.send(receptionist.getAccessCode(), response);
+		Responder.send(service.getAccessCode(), response);
 	}
 
 }

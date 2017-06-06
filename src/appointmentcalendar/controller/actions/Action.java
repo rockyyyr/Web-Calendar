@@ -3,17 +3,17 @@ package appointmentcalendar.controller.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import appointmentcalendar.model.database.dao.Receptionist;
+import appointmentcalendar.model.database.dao.Service;
 
 /**
  * Action. Base class for all request actions.
  */
 public abstract class Action {
 
-	protected Receptionist receptionist;
+	protected Service service;
 
 	public Action() {
-		receptionist = new Receptionist();
+		service = new Service();
 	}
 
 	/**

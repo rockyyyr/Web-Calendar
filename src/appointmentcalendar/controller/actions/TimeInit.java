@@ -13,6 +13,6 @@ public class TimeInit extends Action {
 		Data data = new Data(request);
 		String result = data.get("day-sel");
 
-		Responder.send(receptionist.getAvailableTimesFromDay(result), response);
+		Responder.send(service.getAvailableTimesFromDay(result), response);
 	}
 }

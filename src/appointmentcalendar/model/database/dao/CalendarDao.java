@@ -10,18 +10,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import appointmentcalendar.controller.DBConnectionPool;
 import appointmentcalendar.model.User;
+import appointmentcalendar.model.database.DBConnectionPool;
 
 /**
  * CalendarDao.
  */
 public class CalendarDao extends Dao {
 
-	private static final String TABLE_NAME = "calendar";
+	protected static final String TABLE_NAME = "calendar";
 	private static final String BREAK = "break";
 
-	CalendarDao() {
+	protected CalendarDao() {
 		super(TABLE_NAME);
 	}
 
@@ -193,7 +193,7 @@ public class CalendarDao extends Dao {
 					if (value != null && value.equals(email)) {
 						LocalDate day = rs.getDate(1).toLocalDate();
 						appointments.add(
-								day.format(Receptionist.DATE_FORMATTER)
+								day.format(Service.DATE_FORMATTER)
 										+ " @ " + rsmd.getColumnLabel(count - 1));
 					}
 				}

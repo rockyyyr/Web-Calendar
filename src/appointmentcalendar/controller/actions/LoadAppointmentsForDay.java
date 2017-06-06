@@ -20,7 +20,7 @@ public class LoadAppointmentsForDay extends Action {
 		Data data = new Data(request);
 		String day = data.get("day-sel");
 
-		Responder.send(receptionist.getAppointmentsForSpecificDay(day), response);
+		Responder.send(service.getAppointmentsForSpecificDay(day), response);
 	}
 
 }
