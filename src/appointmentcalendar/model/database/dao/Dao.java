@@ -105,8 +105,9 @@ public abstract class Dao {
 	 * @param e
 	 * @param sql
 	 */
-	protected void logError(Throwable e, String sql) {
+	protected void logError(Throwable e, String sql, String method) {
 		LOG.error("Query failed");
+		LOG.error("From: " + method);
 		LOG.error(sql);
 		LOG.error(e);
 	}

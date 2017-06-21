@@ -15,7 +15,7 @@
 			<cron>
 				<name>DatabaseUpdateTrigger</name>
 				<job-name>DatabaseUpdateTask</job-name>
-				<cron-expression>0 31 23 1/1 * ? *</cron-expression>
+				<cron-expression>0 1 2 1/1 * ? *</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

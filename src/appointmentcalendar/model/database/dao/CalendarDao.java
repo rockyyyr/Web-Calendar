@@ -12,13 +12,14 @@ import java.util.List;
 
 import appointmentcalendar.model.User;
 import appointmentcalendar.model.database.DBConnectionPool;
+import appointmentcalendar.model.database.DBProperties;
 
 /**
  * CalendarDao.
  */
 public class CalendarDao extends Dao {
 
-	protected static final String TABLE_NAME = "calendar";
+	protected static final String TABLE_NAME = DBProperties.get("db.scheduling.table");
 	private static final String BREAK = "break";
 
 	protected CalendarDao() {
@@ -121,7 +122,7 @@ public class CalendarDao extends Dao {
 					times.add(label);
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -154,7 +155,7 @@ public class CalendarDao extends Dao {
 				days.add(rs.getDate(Field.DATE.name).toLocalDate());
 
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -199,7 +200,7 @@ public class CalendarDao extends Dao {
 				}
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -255,7 +256,7 @@ public class CalendarDao extends Dao {
 				columnIndex++;
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -297,7 +298,7 @@ public class CalendarDao extends Dao {
 				}
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -307,6 +308,55 @@ public class CalendarDao extends Dao {
 		return appointments;
 	}
 
+	/**
+	 * @param date
+	 * @return list of all users who had an appointment on a specified day
+	 */
+	public List<String> getUsersBookedOnDay(LocalDate date) {
+		List<String> users = new ArrayList<>();
+
+		String sql = String.format(""
+				+ "SELECT * "
+				+ "FROM %s "
+				+ "WHERE %s='%s'",
+				TABLE_NAME,
+				Field.DATE.name, Date.valueOf(date));
+
+		Connection connection = null;;
+		Statement statement = null;
+		ResultSet rs = null;
+
+		try {
+			connection = DBConnectionPool.getConnection();
+			statement = connection.createStatement();
+
+			rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				int index = 2;
+				while (index <= rs.getMetaData().getColumnCount()) {
+					users.add(rs.getString(index++));
+				}
+			}
+
+		} catch (Exception e) {
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
+			e.printStackTrace();
+		} finally {
+			close(rs);
+			close(statement);
+			DBConnectionPool.freeConnection(connection);
+		}
+
+		return users;
+	}
+
+	/**
+	 * Delete a day from the database
+	 * 
+	 * @param day
+	 * @throws SQLException
+	 */
 	public void deleteDay(LocalDate day) throws SQLException {
 		String sql = String.format(""
 				+ "DELETE FROM %s "
@@ -346,7 +396,7 @@ public class CalendarDao extends Dao {
 			}
 
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);

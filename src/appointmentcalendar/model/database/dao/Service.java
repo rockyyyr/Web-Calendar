@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 import appointmentcalendar.model.User;
+import appointmentcalendar.model.analytics.dao.AnalyticService;
 import appointmentcalendar.utils.TimeBlock;
 
 /**
@@ -33,11 +34,15 @@ public class Service {
 	private WorkScheduleDao workScheduleDao;
 	private RecordDao recordDao;
 
+	private AnalyticService analyticService;
+
 	public Service() {
 		userDao = new UserDao();
 		calendarDao = new CalendarDao();
 		workScheduleDao = new WorkScheduleDao();
 		recordDao = new RecordDao();
+
+		analyticService = new AnalyticService();
 	}
 
 	/**
@@ -59,6 +64,7 @@ public class Service {
 			try {
 				User user = new User(firstName, lastName, email, password);
 				userDao.add(user);
+				analyticService.addUser(user);
 				LOG.info("User registered: " + user);
 				return 1;
 			} catch (MySQLIntegrityConstraintViolationException e) {
@@ -88,7 +94,7 @@ public class Service {
 		try {
 			responseCode = userDao.checkUserCredentials(email, password);
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return responseCode;
@@ -101,7 +107,7 @@ public class Service {
 	 * @throws SQLException
 	 */
 	public void login(User user) {
-		userDao.incrementLoginTotalAndUpdateLastLogin(user);
+		analyticService.updateLoginAnalytics(user);
 	}
 
 	/**
@@ -126,13 +132,13 @@ public class Service {
 
 		try {
 			calendarDao.bookAppointment(getDate(day), time, user);
-			userDao.incrementBookingsTotal(user);
+			analyticService.incrementBookingsTotal(user.getEmail());
 
 			LOG.info("Appointment booked: " + user.getEmail() + "= " + day + " @ " + time + user.getEmail());
 
 			return 1;
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 			return 0;
 		}
@@ -150,9 +156,10 @@ public class Service {
 
 		try {
 			calendarDao.cancelAppointment(getDate(date), time);
-			userDao.decrementBookingsTotal(user);
+			analyticService.decrementBookingsTotal(user.getEmail());
 			LOG.info("Appointment cancelled: " + date + " @ " + time);
 		} catch (SQLException e) {
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -166,7 +173,7 @@ public class Service {
 		try {
 			result = calendarDao.getAppointmentsForUser(email);
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -181,7 +188,7 @@ public class Service {
 		try {
 			calendarDao.addDay(day);
 		} catch (SQLException e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -196,7 +203,7 @@ public class Service {
 		try {
 			calendarDao.scheduleBreaks(day, breakList);
 		} catch (SQLException e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -210,7 +217,7 @@ public class Service {
 		try {
 			calendarDao.deleteDay(day);
 		} catch (SQLException e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -236,7 +243,7 @@ public class Service {
 		try {
 			availableDays = calendarDao.getAvailableDays();
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 
@@ -262,10 +269,18 @@ public class Service {
 		try {
 			result = calendarDao.getAvailableTimesFromSpecificDay(getDate(day));
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	/**
+	 * @param date
+	 * @return List of users email's who booked on a specific day
+	 */
+	public List<String> getUsersWhoHadAppointmentOnDay(LocalDate date) {
+		return calendarDao.getUsersBookedOnDay(date);
 	}
 
 	/**
@@ -283,7 +298,7 @@ public class Service {
 		try {
 			result = formatAppointmentList(calendarDao.getNextAppointments(listSize, date, time));
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -299,7 +314,7 @@ public class Service {
 		try {
 			result = formatAppointmentList(calendarDao.getAppointmentsForSpecificDay(getDate(day)));
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -313,7 +328,7 @@ public class Service {
 		try {
 			result = workScheduleDao.getDailyBreaks();
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -327,7 +342,7 @@ public class Service {
 		try {
 			result = workScheduleDao.getWorkingHours();
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -342,7 +357,7 @@ public class Service {
 		try {
 			workScheduleDao.scheduleBreak(time);
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -356,7 +371,7 @@ public class Service {
 		try {
 			workScheduleDao.scheduleNonBreak(time);
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -369,7 +384,7 @@ public class Service {
 		try {
 			result = workScheduleDao.getDaysOffSchedule();
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return result;
@@ -384,7 +399,7 @@ public class Service {
 		try {
 			workScheduleDao.scheduleDayOff(day);
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -399,7 +414,7 @@ public class Service {
 			workScheduleDao.scheduleWorkDay(day);
 			LOG.info("Work days edited");
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -440,7 +455,7 @@ public class Service {
 			calendarDao.setTimeSlots(timeSlots, getDate(day));
 			LOG.info("Time slots edited");
 		} catch (Exception e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 	}
@@ -456,7 +471,7 @@ public class Service {
 			recordDao.add(date);
 			success = true;
 		} catch (SQLException e) {
-			LOG.error(e);
+			logError(e);
 			e.printStackTrace();
 		}
 		return success;
@@ -493,6 +508,14 @@ public class Service {
 	 */
 	private LocalDate getDate(String day) {
 		return LocalDate.parse(day, DATE_FORMATTER);
+	}
+
+	/*
+	 * Log error messages
+	 */
+	private void logError(Exception e) {
+		StackTraceElement[] stack = e.getStackTrace();
+		LOG.error(e + " : " + e.getMessage() + " @ " + stack[1] + " - " + stack[2]);
 	}
 
 }

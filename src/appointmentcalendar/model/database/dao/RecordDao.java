@@ -4,12 +4,14 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import appointmentcalendar.model.database.DBProperties;
+
 /**
  * RecordDao.
  */
 public final class RecordDao extends Dao {
 
-	private static final String TABLE_NAME = "records";
+	private static final String TABLE_NAME = DBProperties.get("db.bookKeeping.table");
 
 	RecordDao() {
 		super(TABLE_NAME);

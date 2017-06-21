@@ -20,10 +20,8 @@ var Data = function() {
 		var json;
 		
 		if(data.constructor === Array){
-			console.log("converted to json");
 			json = toJson(action, data); 
 		}else { 
-			console.log("data was json");
 			json = {'action' : action, 'data' : data};
 		}
 		
@@ -63,21 +61,16 @@ var Data = function() {
 	
 	
 	toJson = function(action, params){
-		console.log("toJson called");
-		console.log("param[0]=" + params[0]);
-		
 		var json = '{"action":"' + action + '", "data": {"' + params[0] + '":"' + value(params[0]) + '"'; 
 		
 		if(params.length > 1)
 			for(var i = 1; i < params.length; i++)
 				json += ', "' + params[i] + '": "' + value(params[i]) + '"';
-		console.log(json + '}}');
 		return JSON.parse(json + '}}');
 	};
 
 	value = function(id){
 		var selector = "#" + id;
-		console.log("selector: " + selector);
 		switch($(selector)[0].nodeName){
 			case 'INPUT': return $(selector).val();
 			case 'SELECT': return $(selector).find(':selected').text();

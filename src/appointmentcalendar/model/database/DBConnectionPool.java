@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
  * Servlet implementation class DBConnectionPool
  */
 public class DBConnectionPool extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	private static Logger LOG = LogManager.getLogger();

@@ -1,23 +1,21 @@
 package appointmentcalendar.model.database.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import appointmentcalendar.model.User;
 import appointmentcalendar.model.database.DBConnectionPool;
+import appointmentcalendar.model.database.DBProperties;
 
 /**
  * UserDao.
  */
 public final class UserDao extends Dao {
 
-	private static final String TABLE_NAME = "users";
+	private static final String TABLE_NAME = DBProperties.get("db.userServices.table");
+	private static final String SETTINGS_TABLE_NAME = DBProperties.get("db.settings.table");
 
 	UserDao() {
 		super(TABLE_NAME);
@@ -32,13 +30,12 @@ public final class UserDao extends Dao {
 	 *             if a database access error occurs or the statement fails to execute
 	 */
 	public void add(User user) throws SQLException {
-		String sql = String.format("INSERT INTO %s values('%s', '%s', '%s', '%s', 'false', '%s')",
+		String sql = String.format("INSERT INTO %s values('%s', '%s', '%s', '%s', 'false')",
 				TABLE_NAME,
 				user.getFirstName(),
 				user.getLastName(),
 				user.getEmail(),
-				user.getPassword(),
-				Date.valueOf(LocalDate.now()));
+				user.getPassword());
 
 		executeUpdate(sql);
 	}
@@ -78,11 +75,9 @@ public final class UserDao extends Dao {
 				user.setLastName(rs.getString(Field.LAST_NAME.name));
 				user.setEmail(rs.getString(Field.EMAIL.name));
 				user.setPassword(rs.getString(Field.PASSWORD.name));
-				user.setLoginTotal(rs.getInt(Field.LOGIN_TOTAL.name));
-				user.setBookingTotal(rs.getInt(Field.BOOKING_TOTAL.name));
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -136,7 +131,7 @@ public final class UserDao extends Dao {
 				isAdmin = rs.getString(Field.ADMIN.name);
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 			close(rs);
 			close(statement);
@@ -157,94 +152,6 @@ public final class UserDao extends Dao {
 		return responseCode;
 	}
 
-	/**
-	 * Update login specific data for user
-	 * 
-	 * @param user
-	 * @throws SQLException
-	 */
-	public void incrementLoginTotalAndUpdateLastLogin(User user) {
-		String sql = String.format(""
-				+ "UPDATE %s "
-				+ "SET %s='%s', %s='%s' "
-				+ "WHERE %s='%s'",
-				TABLE_NAME,
-				Field.LOGIN_TOTAL.name, user.getLoginTotal() + 1,
-				Field.LAST_LOGIN.name, Timestamp.valueOf(LocalDateTime.now()),
-				Field.EMAIL.name, user.getEmail());
-		try {
-			executeUpdate(sql);
-		} catch (SQLException e) {
-			logError(e, sql);
-			System.out.println(sql);
-			e.printStackTrace();
-		}
-	}
-
-	public void incrementBookingsTotal(User user) {
-		updateBookingTotal(user, "+");
-	}
-
-	public void decrementBookingsTotal(User user) {
-		updateBookingTotal(user, "-");
-	}
-
-	public int getBookingsTotal(String email) {
-		int total = 0;
-
-		String sql = String.format(""
-				+ "SELECT %s "
-				+ "FROM %s "
-				+ "WHERE %s='%s'",
-				Field.BOOKING_TOTAL.name,
-				TABLE_NAME,
-				Field.EMAIL.name, email);
-
-		Connection connection = null;;
-		Statement statement = null;
-		ResultSet rs = null;
-
-		try {
-			connection = DBConnectionPool.getConnection();
-			statement = connection.createStatement();
-
-			rs = statement.executeQuery(sql);
-
-			while (rs.next())
-				total = rs.getInt(Field.BOOKING_TOTAL.name);
-
-		} catch (Exception e) {
-			logError(e, sql);
-			e.printStackTrace();
-			close(rs);
-			close(statement);
-		} finally {
-			close(rs);
-			close(statement);
-			DBConnectionPool.freeConnection(connection);
-		}
-		return total;
-	}
-
-	private void updateBookingTotal(User user, String modifier) {
-		int total = getBookingsTotal(user.getEmail());
-
-		String sql = String.format(""
-				+ "UPDATE %s "
-				+ "SET %s='%s'"
-				+ "WHERE %s='%s'",
-				TABLE_NAME,
-				Field.BOOKING_TOTAL.name, modifier.equals("+") ? total + 1 : total - 1,
-				Field.EMAIL.name, user.getEmail());
-
-		try {
-			executeUpdate(sql);
-		} catch (SQLException e) {
-			logError(e, sql);
-			e.printStackTrace();
-		}
-	}
-
 	public String getAccessCode() {
 		String accessCode = "";
 		String sql = String.format("SELECT * FROM access");
@@ -263,7 +170,7 @@ public final class UserDao extends Dao {
 				accessCode = rs.getString("access_code");
 
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 			close(rs);
 			close(statement);
@@ -278,12 +185,14 @@ public final class UserDao extends Dao {
 
 	public void setAccessCode(String accessCode) {
 		String sql = String.format(""
-				+ "UPDATE access "
-				+ "SET access_code='%s' ", accessCode);
+				+ "UPDATE %s "
+				+ "SET access_code='%s' ",
+				SETTINGS_TABLE_NAME,
+				accessCode);
 		try {
 			executeUpdate(sql);
 		} catch (SQLException e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		}
 	}
@@ -293,11 +202,7 @@ public final class UserDao extends Dao {
 		LAST_NAME("lastName", "VARCHAR(40)"),
 		EMAIL("email", "VARCHAR(80) PRIMARY KEY "),
 		PASSWORD("password", "VARCHAR(40)"),
-		ADMIN("admin", "VARCHAR(10)"),
-		JOIN_DATE("member_since", "DATE"),
-		LAST_LOGIN("last_login", "DATE"),
-		LOGIN_TOTAL("num_of_logins", "INT"),
-		BOOKING_TOTAL("num_of_bookings", "INT");
+		ADMIN("admin", "VARCHAR(10)");
 
 		String name;
 		String type;

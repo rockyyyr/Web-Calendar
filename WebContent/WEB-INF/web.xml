@@ -25,6 +25,16 @@
 		<servlet-name>DBConnectionPool</servlet-name>
 		<url-pattern>/DBConnectionPool</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+	    <servlet-name>DBProperties</servlet-name>
+	    <servlet-class>appointmentcalendar.model.database.DBProperties</servlet-class>
+	    <init-param>
+        	<param-name>fileName</param-name>
+        	<param-value>/WEB-INF/db_tables.properties</param-value>
+        </init-param>
+	    <load-on-startup>2</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<servlet-name>FrontController</servlet-name>

@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import appointmentcalendar.model.database.DBConnectionPool;
+import appointmentcalendar.model.database.DBProperties;
 
 /**
  * WorkScheduleDao.
  */
 public final class WorkScheduleDao extends Dao {
 
-	private static final String BREAKS_TABLE_NAME = "breaks";
-	private static final String DAYS_TABLE_NAME = "workdays";
+	private static final String BREAKS_TABLE_NAME = DBProperties.get("db.dailySchedule.table");
+	private static final String DAYS_TABLE_NAME = DBProperties.get("db.weeklySchedule.table");
 
 	private static final String ID_CONDITION = "WHERE ID='1'";
 	private static final String BREAK = "break";
@@ -118,7 +119,7 @@ public final class WorkScheduleDao extends Dao {
 				}
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -197,7 +198,7 @@ public final class WorkScheduleDao extends Dao {
 				}
 			}
 		} catch (Exception e) {
-			logError(e, sql);
+			logError(e, sql, this.getClass().getEnclosingMethod().getName());
 			e.printStackTrace();
 		} finally {
 			close(rs);
