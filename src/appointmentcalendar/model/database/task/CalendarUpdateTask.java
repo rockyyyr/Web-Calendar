@@ -81,7 +81,13 @@ public class CalendarUpdateTask implements DailyTask {
 	 * @throws SQLException
 	 */
 	private LocalDate generateNextWorkDay(List<String> daysOff, List<LocalDate> currentSchedule) {
+
 		LocalDate newDay = LocalDate.now();
+
+		for (String day : daysOff) {
+			if (newDay.getDayOfWeek().toString().equalsIgnoreCase(day))
+				newDay = newDay.plusDays(1);
+		}
 
 		for (LocalDate date : currentSchedule) {
 			if (newDay.equals(date)) {
@@ -124,7 +130,9 @@ public class CalendarUpdateTask implements DailyTask {
 	 * @return a string listing the times to set to 'break' in SQL syntax
 	 */
 	private String generateBreakSQLString(List<String> breaks) {
+
 		StringBuilder sql = new StringBuilder();
+
 		int size = breaks.size();
 
 		if (size > 0) {
