@@ -9,7 +9,7 @@
  */
 var Data = function() {
 
-	var URL = Global.url + "/frontController";
+	const URL = Global.url + "/frontController";
 
 	/*
 	 * Send data to the server and optionally accept a data response.
@@ -17,20 +17,12 @@ var Data = function() {
 	 * If the response is expected as a list, set asList as true on function call
 	 */
 	PUBLIC_give = function(action, data, callback, asList) {
-		var json;
-		
-		if(data.constructor === Array){
-			json = toJson(action, data); 
-		}else { 
-			json = {'action' : action, 'data' : data};
-		}
-		
 		$.ajax({
-			type: 'POST',
-			url: URL,
-			data: json,
+			    type: 'POST',
+			     url: URL,
+		    	data: _package(action, data),
 			datatype: 'json',
-			success: function(response){
+			 success: function(response){
 				if(callback !== undefined){
 					if(response !== "")
 						if(asList === true)
@@ -56,20 +48,26 @@ var Data = function() {
 				callback(data);
 			else
 				callback(JSON.parse(data));
-		})
+		});
 	};
-	
-	
-	toJson = function(action, params){
-		var json = '{"action":"' + action + '", "data": {"' + params[0] + '":"' + value(params[0]) + '"'; 
+
+	_package = function(action, data){
+        if(data.constructor === Array)
+            return _toJson(action, data);
+        else
+            return {'action' : action, 'data' : data};
+	};
+
+	_toJson = function(action, params){
+		var json = '{"action":"' + action + '", "data": {"' + params[0] + '":"' + _value(params[0]) + '"';
 		
 		if(params.length > 1)
 			for(var i = 1; i < params.length; i++)
-				json += ', "' + params[i] + '": "' + value(params[i]) + '"';
+				json += ', "' + params[i] + '": "' + _value(params[i]) + '"';
 		return JSON.parse(json + '}}');
 	};
 
-	value = function(id){
+	_value = function(id){
 		var selector = "#" + id;
 		switch($(selector)[0].nodeName){
 			case 'INPUT': return $(selector).val();
@@ -81,4 +79,5 @@ var Data = function() {
 		give: PUBLIC_give,
 		get: PUBLIC_get
 	};
+
 }();

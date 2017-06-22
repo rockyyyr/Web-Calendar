@@ -1,14 +1,14 @@
 var Appointments = function(){
 	
-	var appointmentListSize;
+	var appointmentListSize = 0;
 	
 	PUBLIC_book = function(){
 		Data.give('booking', ['day-sel', 'time-select'], function(data){
 	    	appointmentListSize++;
-	    	addAppointmentElement(data.day + " @ " + data.time);
-	    	updateAppointmentHeading();
+	    	_addAppointmentElement(data.day + " @ " + data.time);
+	    	_updateAppointmentHeading();
 	    	displayConfirmMessage();
-	    	Calendar.refreshDayAndTime();
+	    	Calendar.PUBLIC_refreshDayAndTime();
 	    });
 	};
 	
@@ -26,20 +26,20 @@ var Appointments = function(){
 	        	if (appointmentListSize > 0){
 	        		appointmentListSize--;
 	        	}
-	        	updateAppointmentHeading();
+	        	_updateAppointmentHeading();
 	        	displayCancelMessage();
 	        });
 	    }
 	};
 	
 	PUBLIC_displayUserAppointments = function(appointments){
-		appointmentListSize = getObjectSize(appointments);
+		appointmentListSize = _getObjectSize(appointments);
 
-	    updateAppointmentHeading();
+	    _updateAppointmentHeading();
 
 	    if (appointmentListSize > 0) {
 	        $.each(appointments, function (index, element) {
-	        	addAppointmentElement(element);
+	        	_addAppointmentElement(element);
 	        });
 	    }
 	};
@@ -55,7 +55,7 @@ var Appointments = function(){
 	
 	PUBLIC_showAppointmentsToAdmin = function(){
 		Data.get('nextAppointments', function(data){
-			if(getObjectSize(data) === 0){
+			if(_getObjectSize(data) === 0){
 				$('#next-appointments').append("<div class='font-16 text-center'><i>No Appointments</i></div>");
 			} else {
 				$.each(data, function(index, element) {
@@ -66,7 +66,7 @@ var Appointments = function(){
 	};
 	
 	
-	addAppointmentElement = function(element){
+	_addAppointmentElement = function(element){
 		var id = "a" + element.replace(/\s+/g, '').replace(/@/g, '').replace(/:/g, '').replace(/-/g, '');
 	    $('#appointment-list').append(
 	        "<div id='" + id + "'>" 
@@ -75,7 +75,7 @@ var Appointments = function(){
 	        + "</div>");
 	};
 	
-	updateAppointmentHeading = function(){
+	_updateAppointmentHeading = function(){
 		switch (appointmentListSize) {
         	case 0:$('#appointment-heading').html("You have no appointments");break;
         	case 1:$('#appointment-heading').html("Your next appointment is:");break;
@@ -83,7 +83,7 @@ var Appointments = function(){
 		}
 	};
 	
-	getObjectSize = function(object) {
+	_getObjectSize = function(object) {
 	    var count = 0;
 	    var i;
 
@@ -91,7 +91,7 @@ var Appointments = function(){
 	        if (object.hasOwnProperty(i)) count++;
 	    }
 	    return count;
-	}
+	};
 	
 	return {
 		book: PUBLIC_book,
@@ -100,4 +100,5 @@ var Appointments = function(){
 		showAppointmentsByDay: PUBLIC_showAppointmentsByDay,
 		showAppointmentsToAdmin: PUBLIC_showAppointmentsToAdmin
 	};
+
 }();

@@ -1,14 +1,14 @@
 var AdminService = function(){
-	
-	var sunday = "SUNDAY";
-	var monday = "MONDAY";
-	var tuesday = "TUESDAY";
-	var wednesday = "WEDNESDAY";
-	var thursday = "THURSDAY";
-	var friday = "FRIDAY";
-	var saturday = "SATURDAY";
 
-	var days = [sunday, monday, tuesday, wednesday, thursday, friday, saturday];
+	const days = [
+		"SUNDAY",
+		"MONDAY",
+		"TUESDAY",
+		"WEDNESDAY",
+		"THURSDAY",
+		"FRIDAY",
+		"SATURDAY"
+	];
 	
 	PUBLIC_initDaysOffCheckBoxes = function(){
 		Data.get('getDaysOff', function(data){
@@ -49,4 +49,5 @@ var AdminService = function(){
 		getAccessCode: PUBLIC_getAccessCode,
 		setAccessCode: PUBLIC_setAccessCode
 	};
+
 }();

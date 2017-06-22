@@ -1,6 +1,6 @@
 var Calendar = function(){
 	
-	initDay = function(){
+	PUBLIC_initDay = function(){
 		$('.day-select-list').find('option').remove().end();
 	    $('.day-select-list').append("<option selected disabled>Choose a day</option>");
 	    
@@ -11,7 +11,7 @@ var Calendar = function(){
 	    }, true);
 	};
 	
-	initTime = function(id){
+	PUBLIC_initTime = function(id){
 		hideInfoMessage();
 	    $('#time-select').find('option').remove().end();
 	    $('#time-select').append("<option selected disabled>Choose a time</option>");
@@ -30,16 +30,16 @@ var Calendar = function(){
 	    }, true);
 	};
 	
-	refreshDayAndTime = function(){
+	PUBLIC_refreshDayAndTime = function(){
 		$('#time-select').empty();
 	    $('#day-sel').empty();
-	    Calendar.initDay();
+	    Calendar.PUBLIC_initDay();
 	};
-	
-	
+
 	return{
-		initDay: initDay,
-		initTime: initTime,
-		refreshDayAndTime: refreshDayAndTime
-	}
+		initDay: PUBLIC_initDay,
+		initTime: PUBLIC_initTime,
+		refreshDayAndTime: PUBLIC_refreshDayAndTime
+	};
+
 }();

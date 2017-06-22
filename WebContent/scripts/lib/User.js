@@ -3,7 +3,7 @@ var User = new function(){
 	PUBLIC_login = function(email, password){
 		Data.give('login', [email, password], function(data){
 			switch (data.responseCode) {
-				case 1: PRIVATE_displayInfo(data.firstName); 
+				case 1: _displayInfo(data.firstName);
 						Appointments.displayUserAppointments(data.appointments); 
 						displayBookingForm(); 
 						break;
@@ -46,7 +46,7 @@ var User = new function(){
 	    });
 	};
 	
-	PRIVATE_displayInfo = function(firstName){
+	_displayInfo = function(firstName){
 		$('#name-label').html("<b>" + firstName + "</b>");
 	};
 	
@@ -54,5 +54,6 @@ var User = new function(){
 		login: PUBLIC_login,
 		register: PUBLIC_register,
 		recoverPassword: PUBLIC_recoverPassword
-	}
+	};
+
 }();

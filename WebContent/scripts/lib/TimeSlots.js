@@ -9,7 +9,7 @@ var TimeSlots = function(){
 		
 		Data.give('getTimeSlots', {'day':day}, function(data){
 			$.each(data, function(index, element) {
-				PRIVATE_addButton(element);
+				_addButton(element);
 			});
 		}, true);
 	};
@@ -43,7 +43,7 @@ var TimeSlots = function(){
 	/*
 	 * Add a time slot button to the button panel
 	 */
-	PRIVATE_addButton = function(time){
+	_addButton = function(time){
 		var split = time.split("|");
 		var time = split[0];
 		var status = split[1];
@@ -71,6 +71,6 @@ var TimeSlots = function(){
 		show: PUBLIC_show,
 		hide: PUBLIC_hide,
 		save: PUBLIC_save
-	}
+	};
 	
 }();

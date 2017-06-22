@@ -1,19 +1,19 @@
 //////////////////////// Button events ////////////////////////////
 
 $(document).ready(function () {
-	RandomColors.randomize();
+	RandomColors.PUBLIC_randomize();
 
     $('.button').click(function () {
-        RandomColors.randomize();
+        RandomColors.PUBLIC_randomize();
     });
 
     $("#reg-link").on('click', function () {
-    	RandomColors.randomize();
+    	RandomColors.PUBLIC_randomize();
         toggleLoginRegisterForms();
     });
 
     $('#signin-link').on('click', function () {
-    	RandomColors.randomize();
+    	RandomColors.PUBLIC_randomize();
         toggleLoginRegisterForms();
     });
 
@@ -67,7 +67,7 @@ function hidePasswordRecovery() {
 
 function displayBookingForm() {
 	hideWarnings(); 
-	Calendar.initDay();
+	Calendar.PUBLIC_initDay();
     $('#login-form').slideUp('slow');
     $('#register-form').slideUp('slow');
     $('#booking-form').slideDown('slow');

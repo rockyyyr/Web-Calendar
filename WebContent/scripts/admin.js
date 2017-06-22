@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
-	RandomColors.randomize();
+	RandomColors.PUBLIC_randomize();
 	initPageData();
 	
 	$('#day-sel').on('change', function(){
@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 function initPageData(){
 	Appointments.showAppointmentsToAdmin();
-	Calendar.initDay();
+	Calendar.PUBLIC_initDay();
 	AdminService.initDaysOffCheckboxes();
 	AdminService.getAccessCode();
 }
