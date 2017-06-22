@@ -1,5 +1,24 @@
 # Web-Calendar
 
+## Client Appointment Manager
+
+**After registering with using a registeration access code provided by the administrator, users can schedule and cancel appointments.**
+
+<img align="center" src="https://user-images.githubusercontent.com/16550024/27458116-57a03e32-575c-11e7-9aca-a0cc603dd078.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458114-579e70fc-575c-11e7-8002-047bfeb1c8cb.png" width="400">
+
+**The administrator page shows scheduling information in a variety of ways. At the top the next five appointments for the day are shown.
+Just below that, the admin can view all appointments for a specific day.**
+
+<img align="center" src="https://user-images.githubusercontent.com/16550024/27458115-579f4504-575c-11e7-997c-1c6974c19f60.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458118-57b1c864-575c-11e7-9f04-ac016ffbfa7b.png" width="400">
+
+**The admin's schedule can be controlled by opening/closing time slots, making them available/not available for users to book. New days are automatically added to the schedule with all of its time slots closed. The admin can go through the schedule and open the desired time slots. Red time slots are closed, green are open.**
+
+<img align="center" src="https://user-images.githubusercontent.com/16550024/27458117-57a32fde-575c-11e7-8724-5c7cdf5e147e.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458120-57b2bb7a-575c-11e7-9e89-12436c516298.png" width="400">
+
+**Timeslots that have already been booked show up as yellow in which case the corresponding time slot button is disabled.**
+
+<img align="center" src="https://user-images.githubusercontent.com/16550024/27458119-57b21576-575c-11e7-978e-e567cfc56656.png" width="400">
+
 ## How it works
 
 
