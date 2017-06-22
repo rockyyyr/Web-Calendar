@@ -30,8 +30,15 @@ public final class UserDao extends Dao {
 	 *             if a database access error occurs or the statement fails to execute
 	 */
 	public void add(User user) throws SQLException {
-		String sql = String.format("INSERT INTO %s values('%s', '%s', '%s', '%s', 'false')",
+		String sql = String.format(""
+				+ "INSERT INTO %s (%s, %s, %s, %s, %s) "
+				+ "values('%s', '%s', '%s', '%s', 'false')",
 				TABLE_NAME,
+				Field.FIRST_NAME.name,
+				Field.LAST_NAME.name,
+				Field.EMAIL.name,
+				Field.PASSWORD.name,
+				Field.ADMIN.name,
 				user.getFirstName(),
 				user.getLastName(),
 				user.getEmail(),

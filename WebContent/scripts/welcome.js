@@ -94,7 +94,7 @@ function showEmailAlreadyRegisteredMessage() {
 }
 
 function showDatabaseErrorDialog() {
-    alert("There was an error connecting to the server. Try again.")
+    alert("There was an error connecting to the server. Try again.");
 }
 
 function showWrongAccessCodeMessage() {

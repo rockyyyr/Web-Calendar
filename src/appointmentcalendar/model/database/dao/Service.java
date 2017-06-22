@@ -26,6 +26,7 @@ public class Service {
 
 	public static final String DATE_FORMAT = "EEE d MMMM yyyy";
 	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale.ENGLISH);
+	public static final int SERVER_TIME_CORRECTION = 2;
 
 	private static final Logger LOG = LogManager.getLogger();
 
@@ -68,8 +69,10 @@ public class Service {
 				LOG.info("User registered: " + user);
 				return 1;
 			} catch (MySQLIntegrityConstraintViolationException e) {
+				logError(e);
 				return 2;
 			} catch (SQLException e) {
+				logError(e);
 				return 3;
 			}
 		} else {
@@ -291,7 +294,10 @@ public class Service {
 	 */
 	public List<String> getNextAppointments(int listSize) {
 		LocalDate date = LocalDate.now();
-		String time = new TimeBlock(LocalTime.now().truncatedTo(ChronoUnit.HOURS)).getFormattedTime();
+		String time = new TimeBlock(LocalTime.now()
+				.minusHours(SERVER_TIME_CORRECTION)
+				.truncatedTo(ChronoUnit.HOURS))
+						.getFormattedTime();
 
 		List<String> result = new ArrayList<>();
 
