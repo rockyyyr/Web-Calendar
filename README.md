@@ -10,7 +10,9 @@
 <br>
 
 **The administrator page shows scheduling information in a variety of ways. At the top the next five appointments for the day are shown.
-Just below that, the admin can view all appointments for a specific day.**
+Just below that, the admin can view all appointments for a specific day.** 
+
+**The admin control panel also allows for days off to be set meaning they aren't added to the schedule. The registeration access code is also set here.**
 
 <img align="center" src="https://user-images.githubusercontent.com/16550024/27458115-579f4504-575c-11e7-997c-1c6974c19f60.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458118-57b1c864-575c-11e7-9f04-ac016ffbfa7b.png" width="400">
 
@@ -19,7 +21,7 @@ Just below that, the admin can view all appointments for a specific day.**
 
 **The admin's schedule can be controlled by opening/closing time slots, making them available/not available for users to book.**
 
-**New days are automatically added to the schedule with all of its time slots closed. The admin can go through the schedule and open the desired time slots. Red time slots are closed, green are open. Days off can be set meaning they aren't added to the schedule. The registeration access code is also set here.**
+**New days are automatically added to the schedule with all of its time slots closed. The admin can go through the schedule and open the desired time slots. Red time slots are closed, green are open.**
 
 <img align="center" src="https://user-images.githubusercontent.com/16550024/27458117-57a32fde-575c-11e7-8724-5c7cdf5e147e.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458120-57b2bb7a-575c-11e7-9e89-12436c516298.png" width="400">
 
