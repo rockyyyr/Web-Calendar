@@ -16,8 +16,6 @@ var Calendar = function(){
 	    $('#time-select').find('option').remove().end();
 	    $('#time-select').append("<option selected disabled>Choose a time</option>");
 	    
-	    console.log("id= " + id);
-	    
 	    Data.give('timeInit', [id], function(data){
 	    	if(data.length === 0){
 	    		$('#time-select').find('option').remove().end();
