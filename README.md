@@ -12,7 +12,7 @@
 **The administrator page shows scheduling information in a variety of ways. At the top the next five appointments for the day are shown.
 Just below that, the admin can view all appointments for a specific day.** 
 
-**The admin control panel also allows for days off to be set meaning they aren't added to the schedule. The registeration access code is also set here.**
+**The admin control panel also allows for time slots to be opened/closed and days off to be set meaning they aren't added to the schedule. The registeration access code is also set here.**
 
 <img align="center" src="https://user-images.githubusercontent.com/16550024/27458115-579f4504-575c-11e7-997c-1c6974c19f60.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458118-57b1c864-575c-11e7-9f04-ac016ffbfa7b.png" width="400">
 
