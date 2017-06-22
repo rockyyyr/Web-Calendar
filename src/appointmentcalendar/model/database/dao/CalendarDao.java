@@ -234,7 +234,7 @@ public class CalendarDao extends Dao {
 			rs.first();
 
 			int index = 1;
-			int columnIndex = 1;
+			int columnIndex = 2;
 			while (index <= rsmd.getColumnCount()) {
 				String column = rsmd.getColumnLabel(index);
 
@@ -249,7 +249,7 @@ public class CalendarDao extends Dao {
 			while (columnIndex <= rsmd.getColumnCount()) {
 				String email = rs.getString(columnIndex);
 
-				if (email != null && !email.equals(day) && !email.equals(BREAK) && listSize < totalListSize) {
+				if (email != null && !email.equals(BREAK) && listSize < totalListSize) {
 					appointments.add(email + "|" + rsmd.getColumnLabel(columnIndex));
 					listSize++;
 				}
