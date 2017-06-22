@@ -1,6 +1,6 @@
 # Web-Calendar
 
-## Client Appointment Manager
+## Client Appointment Management
 
 **After registering with using a registeration access code provided by the administrator, users can schedule and cancel appointments.**
 
