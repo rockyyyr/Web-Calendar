@@ -17,7 +17,9 @@ Just below that, the admin can view all appointments for a specific day.**
 <br>
 <br>
 
-**The admin's schedule can be controlled by opening/closing time slots, making them available/not available for users to book. New days are automatically added to the schedule with all of its time slots closed. The admin can go through the schedule and open the desired time slots. Red time slots are closed, green are open.**
+**The admin's schedule can be controlled by opening/closing time slots, making them available/not available for users to book.**
+
+**New days are automatically added to the schedule with all of its time slots closed. The admin can go through the schedule and open the desired time slots. Red time slots are closed, green are open. Days off can be set meaning they aren't added to the schedule. The registeration access code is also set here.**
 
 <img align="center" src="https://user-images.githubusercontent.com/16550024/27458117-57a32fde-575c-11e7-8724-5c7cdf5e147e.png" width="400"><img align="center" src="https://user-images.githubusercontent.com/16550024/27458120-57b2bb7a-575c-11e7-9e89-12436c516298.png" width="400">
 
@@ -27,6 +29,11 @@ Just below that, the admin can view all appointments for a specific day.**
 **Timeslots that have already been booked show up as yellow in which case the corresponding time slot button is disabled.**
 
 <img align="center" src="https://user-images.githubusercontent.com/16550024/27458119-57b21576-575c-11e7-978e-e567cfc56656.png" width="400">
+
+<br>
+<br>
+
+**A record of all appointments is kept and will be used for business analytics which will be viewable in a future update.** 
 
 <br>
 <br>
