@@ -15,10 +15,11 @@ public class AnalyticService {
 
 	private static final Logger LOG = LogManager.getLogger();
 
-	private ClientAnalyticsDao clientAnalyticsDao;
+	private ClientAnalyticsDao clientsDao;
+	private BusinessAnalyticsDao businessDao;
 
 	public AnalyticService() {
-		clientAnalyticsDao = new ClientAnalyticsDao();
+		clientsDao = new ClientAnalyticsDao();
 	}
 
 	/**
@@ -28,7 +29,7 @@ public class AnalyticService {
 	 */
 	public void addUser(User user) {
 		try {
-			clientAnalyticsDao.add(user);
+			clientsDao.add(user);
 		} catch (SQLException e) {
 			LOG.error(e);
 			e.printStackTrace();
@@ -36,19 +37,23 @@ public class AnalyticService {
 	}
 
 	public void updateLoginAnalytics(User user) {
-		clientAnalyticsDao.incrementLoginTotalAndUpdateLastLogin(user);
+		clientsDao.incrementLoginTotalAndUpdateLastLogin(user);
 	}
 
 	public void incrementBookingsTotal(String email) {
-		clientAnalyticsDao.incrementBookingsTotal(email);
+		clientsDao.incrementBookingsTotal(email);
 	}
 
 	public void decrementBookingsTotal(String email) {
-		clientAnalyticsDao.decrementBookingsTotal(email);
+		clientsDao.decrementBookingsTotal(email);
 	}
 
 	public void setLastAppointment(String email, LocalDate date) {
-		clientAnalyticsDao.setLastAppointment(email, date);
+		clientsDao.setLastAppointment(email, date);
+	}
+
+	public BusinessAnalyticsValues getBusinessAnaltyicsValues() {
+		return businessDao.getBusinessAnalyticsValues();
 	}
 
 }

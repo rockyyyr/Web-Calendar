@@ -4,17 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 import appointmentcalendar.model.analytics.dao.AnalyticService;
+import appointmentcalendar.model.analytics.dao.BusinessAnalyticsValues;
 import appointmentcalendar.model.database.dao.Service;
 
 /**
- * UserAnalyticsUpdateTask.
+ * AnalyticsUpdateTask.
  */
-public class UserAnalyticsUpdateTask implements DailyTask {
+public class AnalyticsUpdateTask implements DailyTask {
 
 	private Service service;
 	private AnalyticService analyticService;
 
-	public UserAnalyticsUpdateTask() {
+	public AnalyticsUpdateTask() {
 		service = new Service();
 		analyticService = new AnalyticService();
 	}
@@ -42,6 +43,7 @@ public class UserAnalyticsUpdateTask implements DailyTask {
 	}
 
 	private void updateBusinessAnalytics(List<String> users) {
+		BusinessAnalyticsValues bav = analyticService.getBusinessAnaltyicsValues();
 
 	}
 
