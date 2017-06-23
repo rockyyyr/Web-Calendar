@@ -20,8 +20,9 @@ public class DailyDatabaseUpdater implements Job {
 
 	public DailyDatabaseUpdater() {
 		dailyTasks = new ArrayList<>();
-		dailyTasks.add(new CalendarUpdateTask());
+		dailyTasks.add(new UserAnalyticsUpdateTask());
 		dailyTasks.add(new AddDayToRecordTask());
+		dailyTasks.add(new CalendarUpdateTask()); // Must run last
 	}
 
 	/*
